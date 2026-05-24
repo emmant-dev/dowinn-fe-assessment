@@ -3,10 +3,11 @@ import Input from "./Input";
 
 interface ProjectFormProps {
   onSubmit?: (data: { title: string; description: string }) => void;
+  isOpen: boolean;
   onClose: () => void;
 }
 
-export default function ProjectForm({ onSubmit, onClose }: ProjectFormProps) {
+export default function ProjectForm({ isOpen, onClose }: ProjectFormProps) {
   return (
     <form className="flex flex-col gap-5" onSubmit={(e) => e.preventDefault()}>
       <Input

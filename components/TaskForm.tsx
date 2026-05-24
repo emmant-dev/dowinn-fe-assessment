@@ -2,11 +2,10 @@ import Button from "./Button";
 import Input from "./Input";
 
 interface TaskFormProps {
-  onSubmit?: (data: any) => void;
+  isOpen: boolean;
   onClose: () => void;
 }
-
-export default function TaskForm({ onSubmit, onClose }: TaskFormProps) {
+export default function TaskForm({ isOpen, onClose }: TaskFormProps) {
   return (
     <form className="flex flex-col gap-5" onSubmit={(e) => e.preventDefault()}>
       <Input
