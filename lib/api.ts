@@ -17,52 +17,51 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
+
 // Auth
 export const authAPI = {
-  login: (email: string, password: string) =>
-    api.post<ApiResponse<{ token: string; user: User }>>('/testlogin', { email, password }),
-  signup: (email: string, password: string, name: string) =>
-    api.post<ApiResponse<User>>('/test1/create_member', { email, password, name }),
+  login: (user_id: string, password: string) =>
+    api.post<ApiResponse<{ token: string; user: User }>>('/testlogin', { user_id, password }),
+  signup: (user_id: string, email: string, password: string) =>
+    api.post<ApiResponse<User>>('/test01/create_member', { user_id, email, password }),
   getProfile: (id: string) =>
-    api.get<ApiResponse<User>>(`/test1/get_member?id=${id}`),
+    api.get<ApiResponse<User>>(`/test01/get_member?id=${id}`),
   updateProfile: (id: string, data: Partial<User>) =>
-    api.patch<ApiResponse<User>>('/test1/update_member', { id, ...data }),
+    api.patch<ApiResponse<User>>('/test01/update_member', { id, ...data }),
 };
 
 // Projects
 export const projectAPI = {
   create: (title: string, description?: string) =>
-    api.post<ApiResponse<Project>>('/test2/create_project', { title, description }),
+    api.post<ApiResponse<Project>>('/test02/create_project', { title, description }),
   getAll: () =>
-    api.get<ApiResponse<Project[]>>('/test2/get_all_project'),
+    api.get<ApiResponse<Project[]>>('/test02/get_all_project'),
   getOne: (id: string) =>
-    api.get<ApiResponse<Project>>(`/test2/get_project?id=${id}`),
+    api.get<ApiResponse<Project>>(`/test02/get_project?id=${id}`),
   update: (id: string, data: Partial<Project>) =>
-    api.patch<ApiResponse<Project>>('/test2/patch_project', { id, ...data }),
+    api.patch<ApiResponse<Project>>('/test02/patch_project', { id, ...data }),
 };
 
 // Tasks
 export const taskAPI = {
   create: (projectId: string, title: string, description?: string) =>
-    api.post<ApiResponse<Task>>('/test3/create_task', { projectId, title, description, status: 'Todo' }),
+    api.post<ApiResponse<Task>>('/test03/create_task', { projectId, title, description, status: 'Todo' }),
   getAll: () =>
-    api.get<ApiResponse<Task[]>>('/test3/get_all_task'),
+    api.get<ApiResponse<Task[]>>('/test03/get_all_task'),
   getOne: (id: string) =>
-    api.get<ApiResponse<Task>>(`/test3/get_task?id=${id}`),
+    api.get<ApiResponse<Task>>(`/test03/get_task?id=${id}`),
   update: (id: string, data: Partial<Task>) =>
-    api.patch<ApiResponse<Task>>('/test3/patch_task', { id, ...data }),
+    api.patch<ApiResponse<Task>>('/test03/patch_task', { id, ...data }),
 };
 
 // ChangeLogs
 export const changeLogAPI = {
   create: (taskId: string, action: string) =>
-    api.post<ApiResponse<ChangeLog>>('/test4/create_changelog', { taskId, action }),
+    api.post<ApiResponse<ChangeLog>>('/test04/create_changelog', { taskId, action }),
   getAll: () =>
-    api.get<ApiResponse<ChangeLog[]>>('/test4/get_all_change_log'),
+    api.get<ApiResponse<ChangeLog[]>>('/test04/get_all_change_log'),
   getOne: (id: string) =>
-    api.get<ApiResponse<ChangeLog>>(`/test4/get_change_log?id=${id}`),
-  update: (id: string, data: Partial<ChangeLog>) =>
-    api.patch<ApiResponse<ChangeLog>>('/test4/update_change_log', { id, ...data }),
+    api.get<ApiResponse<ChangeLog>>(`/test04/get_change_log?id=${id}`),
 };
 
 export default api;
