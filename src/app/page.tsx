@@ -30,17 +30,33 @@ export default function LoginPage() {
         }
         // Signup
         await authAPI.signup(userId, email, password);
-        // Auto login after signup
+        // Login after signup
         const res = await authAPI.login(userId, password);
-        localStorage.setItem("token", res.data.data?.token || "");
-        localStorage.setItem("userId", userId || "");
-        router.push("/dashboard");
+
+        // Check if login was successful ("ok" or has user_id)
+        if (res.data.data === "ok" || res.data.data) {
+          localStorage.setItem("userId", userId);
+          router.push("/dashboard");
+        } else {
+          setError("Signup failed");
+        }
       } else {
         // Login
         const res = await authAPI.login(userId, password);
-        localStorage.setItem("token", res.data.data?.token || "");
-        localStorage.setItem("userId", userId || "");
-        router.push("/dashboard");
+
+        // Check response
+        if (res.data.data === "invalid credential") {
+          setError("Invalid user ID or password");
+          setLoading(false);
+          return;
+        }
+
+        if (res.data.data === "ok") {
+          localStorage.setItem("userId", userId);
+          router.push("/dashboard");
+        } else {
+          setError("Login failed");
+        }
       }
     } catch (err: any) {
       setError(err.response?.data?.message || "Error occurred");

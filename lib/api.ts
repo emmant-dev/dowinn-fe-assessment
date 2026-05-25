@@ -21,7 +21,7 @@ api.interceptors.request.use((config) => {
 // Auth
 export const authAPI = {
   login: (user_id: string, password: string) =>
-    api.post<ApiResponse<{ token: string; user: User }>>('/testlogin', { user_id, password }),
+    api.post<ApiResponse<string>>('/testlogin', { user_id, password }),
   signup: (user_id: string, email: string, password: string) =>
     api.post<ApiResponse<User>>('/test01/create_member', { user_id, email, password }),
   getProfile: (id: string) =>
