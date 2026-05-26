@@ -3,6 +3,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { AxiosError } from "axios";
 import { authAPI } from "../../lib/api";
 import Input from "../../components/Input";
 import Button from "../../components/Button";
@@ -58,8 +59,9 @@ export default function LoginPage() {
           setError("Login failed");
         }
       }
-    } catch (err: any) {
-      setError(err.response?.data?.message || "Error occurred");
+    } catch (err) {
+      const error = err as AxiosError<{ message?: string }>;
+      setError(error.response?.data?.message || "Error occurred");
     } finally {
       setLoading(false);
     }

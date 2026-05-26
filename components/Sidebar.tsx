@@ -5,12 +5,14 @@ interface SidebarProps {
   projects: Project[];
   selectedProjectId?: string;
   onSelectProject: (id: string) => void;
+  onCreateProject?: () => void;
 }
 
 export default function Sidebar({
   projects,
   selectedProjectId,
   onSelectProject,
+  onCreateProject,
 }: SidebarProps) {
   return (
     <aside className="w-64 h-full border-r border-gray-200 bg-gray-50/50 flex flex-col p-4">
@@ -18,6 +20,7 @@ export default function Sidebar({
         <Button
           variant="primary"
           className="w-full flex items-center justify-center gap-2"
+          onClick={onCreateProject}
         >
           <span>+</span> Create Project
         </Button>

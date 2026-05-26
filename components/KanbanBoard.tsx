@@ -1,11 +1,19 @@
-import { Task } from "../types/index";
+import { Task, TaskStatus } from "../types/index";
 import TaskCard from "./TaskCard";
 
 interface KanbanBoardProps {
   tasks: Task[];
+  onAddTask?: () => void;
+  onEditTask?: (task: Task) => void;
+  onMoveTask?: (task: Task, status: TaskStatus) => void;
 }
 
-export default function KanbanBoard({ tasks }: KanbanBoardProps) {
+export default function KanbanBoard({
+  tasks,
+  onAddTask,
+  onEditTask,
+  onMoveTask,
+}: KanbanBoardProps) {
   const columns = ["Todo", "In Progress", "Done"] as const;
 
   return (
@@ -17,6 +25,12 @@ export default function KanbanBoard({ tasks }: KanbanBoardProps) {
           <div
             key={status}
             className="flex-1 min-w-[280px] max-w-[350px] bg-gray-50/50 rounded-2xl p-4 flex flex-col"
+            onDragOver={(event) => event.preventDefault()}
+            onDrop={(event) => {
+              const taskId = event.dataTransfer.getData("text/plain");
+              const task = tasks.find((item) => item.id === taskId);
+              if (task && task.status !== status) onMoveTask?.(task, status);
+            }}
           >
             <div className="flex justify-between items-center mb-4 px-1">
               <h3 className="font-semibold text-gray-700 text-sm">{status}</h3>
@@ -27,12 +41,22 @@ export default function KanbanBoard({ tasks }: KanbanBoardProps) {
 
             <div className="flex flex-col gap-3 flex-1 overflow-y-auto">
               {columnTasks.map((task) => (
-                <TaskCard key={task.id} task={task} />
+                <TaskCard
+                  key={task.id}
+                  task={task}
+                  onEdit={onEditTask}
+                  onDragStart={(event, dragged) => {
+                    event.dataTransfer.setData("text/plain", dragged.id);
+                  }}
+                />
               ))}
 
-              {/* Optional UI enhancement: Add Task placeholder button */}
               {status === "Todo" && (
-                <button className="w-full py-2 border-2 border-dashed border-gray-200 rounded-2xl text-gray-400 text-sm font-medium hover:border-gray-300 hover:text-gray-600 transition">
+                <button
+                  type="button"
+                  onClick={onAddTask}
+                  className="w-full py-2 border-2 border-dashed border-gray-200 rounded-2xl text-gray-400 text-sm font-medium hover:border-gray-300 hover:text-gray-600 transition"
+                >
                   + Add Task
                 </button>
               )}
