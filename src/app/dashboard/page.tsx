@@ -17,6 +17,7 @@ export default function Dashboard() {
   const [showProjectForm, setShowProjectForm] = useState(false);
   const [showTaskForm, setShowTaskForm] = useState(false);
   const [showChangelog, setShowChangelog] = useState(false);
+  const [showMobileSidebar, setShowMobileSidebar] = useState(false);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [editingProject, setEditingProject] = useState<Project | null>(null);
   const [editingTask, setEditingTask] = useState<Task | null>(null);
@@ -245,7 +246,33 @@ export default function Dashboard() {
         onCreateProject={() => openProjectForm()}
       />
 
-      <div className="flex-1 overflow-auto p-6">
+      {showMobileSidebar && (
+        <div className="fixed inset-0 z-40 md:hidden">
+          <button
+            type="button"
+            aria-label="Close project menu"
+            className="absolute inset-0 bg-black/30"
+            onClick={() => setShowMobileSidebar(false)}
+          />
+          <Sidebar
+            projects={projects}
+            selectedProjectId={selectedProject?.id}
+            onSelectProject={(id) => {
+              setSelectedProject(
+                projects.find((project) => project.id === id) || null
+              );
+              setShowMobileSidebar(false);
+            }}
+            onCreateProject={() => {
+              openProjectForm();
+              setShowMobileSidebar(false);
+            }}
+            className="relative z-10 flex h-full w-72 max-w-[85vw] border-r border-gray-200 bg-gray-50 flex-col p-3 shadow-xl"
+          />
+        </div>
+      )}
+
+      <div className="flex-1 overflow-auto p-4 md:p-5 lg:p-6">
         <div className="mb-4 min-h-10">
           {error && (
             <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
@@ -259,16 +286,30 @@ export default function Dashboard() {
           )}
         </div>
 
-        <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
-          <div>
-            <h2 className="text-2xl font-bold text-gray-900">
-              {selectedProject?.title || "Select a Project"}
-            </h2>
-            {selectedProject?.description && (
-              <p className="mt-1 text-sm text-gray-500">
-                {selectedProject.description}
-              </p>
-            )}
+        <div className="flex flex-col lg:flex-row lg:flex-wrap lg:items-center justify-between gap-4 mb-6">
+          <div className="flex items-start gap-3">
+            <button
+              type="button"
+              aria-label="Open project menu"
+              className="mt-0.5 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-gray-200 bg-white text-gray-700 shadow-sm md:hidden"
+              onClick={() => setShowMobileSidebar(true)}
+            >
+              <span className="flex flex-col gap-1">
+                <span className="block h-0.5 w-4 rounded bg-current" />
+                <span className="block h-0.5 w-4 rounded bg-current" />
+                <span className="block h-0.5 w-4 rounded bg-current" />
+              </span>
+            </button>
+            <div>
+              <h2 className="text-xl sm:text-2xl font-bold text-gray-900">
+                {selectedProject?.title || "Select a Project"}
+              </h2>
+              {selectedProject?.description && (
+                <p className="mt-1 text-sm text-gray-500">
+                  {selectedProject.description}
+                </p>
+              )}
+            </div>
           </div>
 
           <div className="flex flex-wrap gap-2">
