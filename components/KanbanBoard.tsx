@@ -17,14 +17,14 @@ export default function KanbanBoard({
   const columns = ["Todo", "In Progress", "Done"] as const;
 
   return (
-    <div className="flex gap-6 h-full overflow-x-auto pb-4">
+    <div className="flex gap-4 lg:gap-6 h-full overflow-x-auto pb-4">
       {columns.map((status) => {
         const columnTasks = tasks.filter((t) => t.status === status);
 
         return (
           <div
             key={status}
-            className="flex-1 min-w-[280px] max-w-[350px] bg-gray-50/50 rounded-2xl p-4 flex flex-col"
+            className="flex-1 min-w-[250px] sm:min-w-[280px] max-w-[350px] bg-gray-50/50 rounded-2xl p-3 sm:p-4 flex flex-col"
             onDragOver={(event) => event.preventDefault()}
             onDrop={(event) => {
               const taskId = event.dataTransfer.getData("text/plain");

@@ -9,7 +9,7 @@ export default function Button({
   ...props
 }: ButtonProps) {
   const baseStyles =
-    "px-5 py-2 text-sm font-medium rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-1";
+    "px-4 sm:px-5 py-2 text-sm font-medium rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-1";
 
   const variants = {
     primary: "bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-600",
