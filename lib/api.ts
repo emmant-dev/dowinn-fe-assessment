@@ -39,6 +39,22 @@ type TaskResponse = {
   updated_at?: string;
 };
 
+type ChangeLogResponse = {
+  id?: string | number;
+  changeLog_id?: string | number;
+  taskId?: string | number;
+  task_id?: string | number;
+  taskTitle?: string;
+  action?: string;
+  remark?: string;
+  userId?: string | number;
+  user_id?: string | number;
+  timestamp?: string;
+  created_at?: string;
+  old_status?: Task['status'];
+  new_status?: Task['status'];
+};
+
 const normalizeProject = (project: ProjectResponse): Project => ({
   id: String(project.id ?? project.project_id ?? ''),
   title: project.title ?? project.name ?? '',
@@ -56,6 +72,15 @@ const normalizeTask = (task: TaskResponse): Task => ({
   status: task.status ?? 'Todo',
   createdAt: task.createdAt ?? task.created_at ?? '',
   updatedAt: task.updatedAt ?? task.updated_at ?? '',
+});
+
+const normalizeChangeLog = (log: ChangeLogResponse): ChangeLog => ({
+  id: String(log.id ?? log.changeLog_id ?? ''),
+  taskId: String(log.taskId ?? log.task_id ?? ''),
+  taskTitle: log.taskTitle ?? '',
+  action: log.action ?? log.remark ?? '',
+  userId: String(log.userId ?? log.user_id ?? ''),
+  timestamp: log.timestamp ?? log.created_at ?? '',
 });
 
 // Add auth token to requests
@@ -188,22 +213,46 @@ export const taskAPI = {
 
 // ChangeLogs
 export const changeLogAPI = {
-  create: (
+  create: async (
     taskId: string,
     action: string,
     oldStatus: Task['status'] = 'Todo',
     newStatus: Task['status'] = 'Todo'
-  ) =>
-    api.post<ApiResponse<ChangeLog>>('/test04/create_changelog', {
+  ) => {
+    const res = await api.post<ApiResponse<ChangeLogResponse>>('/test04/create_changelog', {
       task_id: taskId,
       old_status: oldStatus,
       new_status: newStatus,
       remark: action,
-    }),
-  getAll: () =>
-    api.get<ApiResponse<ChangeLog[]>>('/test04/get_all_change_log'),
-  getOne: (id: string) =>
-    api.get<ApiResponse<ChangeLog>>(`/test04/get_change_log?id=${id}`),
+    });
+    return {
+      ...res,
+      data: {
+        ...res.data,
+        data: res.data.data ? normalizeChangeLog(res.data.data) : undefined,
+      },
+    };
+  },
+  getAll: async () => {
+    const res = await api.get<ApiResponse<ChangeLogResponse[]>>('/test04/get_all_change_log');
+    return {
+      ...res,
+      data: {
+        ...res.data,
+        data: (res.data.data || []).map(normalizeChangeLog),
+      },
+    };
+  },
+  getOne: async (id: string) => {
+    const res = await api.get<ApiResponse<ChangeLogResponse>>(`/test04/get_change_log?id=${id}`);
+    return {
+      ...res,
+      data: {
+        ...res.data,
+        data: res.data.data ? normalizeChangeLog(res.data.data) : undefined,
+      },
+    };
+  },
 };
 
 export default api;

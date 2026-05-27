@@ -1,13 +1,19 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function Navbar() {
   const router = useRouter();
-  const [userId] = useState(() =>
-    typeof window === "undefined" ? "" : localStorage.getItem("userId") || ""
-  );
+  const [userId, setUserId] = useState("");
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    setUserId(localStorage.getItem("userId") || "");
+  }, []);
+
+  if (!mounted) return null;
 
   const handleLogout = () => {
     localStorage.removeItem("token");

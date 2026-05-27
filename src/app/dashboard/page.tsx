@@ -163,8 +163,13 @@ export default function Dashboard() {
 
     try {
       if (editingTask) {
-        await taskAPI.update(editingTask.id, data);
-        await changeLogAPI.create(editingTask.id, "Task details updated");
+        await taskAPI.update(editingTask.id, { ...editingTask, ...data });
+        await changeLogAPI.create(
+          editingTask.id,
+          "Task details updated",
+          editingTask.status,
+          editingTask.status
+        );
         setMessage("Task updated.");
       } else {
         const taskRes = await taskAPI.create(
@@ -210,6 +215,14 @@ export default function Dashboard() {
       setError("Unable to update task status.");
     }
   };
+
+  const logsWithTaskTitles = visibleLogs.map((log) => {
+    const task = tasks.find((item) => item.id === log.taskId);
+    return {
+      ...log,
+      taskTitle: log.taskTitle || task?.title || `Task #${log.taskId}`,
+    };
+  });
 
   if (loading) {
     return (
@@ -302,7 +315,7 @@ export default function Dashboard() {
 
           {showChangelog && (
             <div className="xl:col-span-1">
-              <ChangeLogPanel logs={visibleLogs} />
+              <ChangeLogPanel logs={logsWithTaskTitles} />
             </div>
           )}
         </div>
