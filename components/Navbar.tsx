@@ -1,19 +1,16 @@
 "use client";
 
+import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useSyncExternalStore } from "react";
 
 export default function Navbar() {
   const router = useRouter();
-  const [userId, setUserId] = useState("");
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-    setUserId(localStorage.getItem("userId") || "");
-  }, []);
-
-  if (!mounted) return null;
+  const userId = useSyncExternalStore(
+    () => () => {},
+    () => localStorage.getItem("userId") || "",
+    () => "",
+  );
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -27,7 +24,7 @@ export default function Navbar() {
         {/* Logo */}
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-lg flex items-center justify-center">
-            <img src="/logo.svg" alt="Logo" />
+            <Image src="/logo.svg" alt="Logo" width={32} height={32} />
           </div>
           <h1 className="text-lg sm:text-xl font-bold text-gray-900 truncate">
             Project Manager
