@@ -36,7 +36,7 @@ http://localhost:3000
 Create a `.env.local` file in the project root for local environment configuration.
 
 ```bash
-NEXT_PUBLIC_API_URL=https://m-backend.dowinnsys.com
+NEXT_PUBLIC_API_BASE_URL=https://m-backend.dowinnsys.com
 ```
 
 The frontend uses this value as the API base URL.
